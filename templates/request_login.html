@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+{% if alert %}
+<div class="alert alert-{{ alert_type }}" role="alert">{{ alert }}</div>
+{% endif %}
+{% if logged_in %}
+<h4>You are already logged in! Go back to the <a href="/">main page</a>.</h4>
+{% else %}
+<form method="post">
+    <div class="mb-3">
+        <label for="kerberos" class="form-label">Kerberos</label>
+        <input type="text" class="form-control" placeholder="Kerberos account without the @mit" id="kerberos" name="kerberos" aria-describedby="kerberosHelp">
+        <div id="kerberosHelp" class="form-text">We will send you an email to login with if you are a graduate student. This ensures that only you can vote under your Kerberos.</div>
+    </div>
+    <input type="hidden" id="csrf" name="csrf" value="{{ csrf }}">
+    <button type="submit" class="btn btn-primary">Send login email</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="alert alert-info" role="alert">
+<p>
+This is a secure and secret voting interface that validates graduate students.
+It is a vision of what the GSU could have done, had they known that there was a contract vote coming up.
+</p>
+<p class="mb-0">
+We have released it as open source, should the GSU wish to implement it.
+See more technical details below the vote list.
+</p>
+</div>
+
+{% if open_elections|length > 0 %}
+<h1>Active votes</h1>
+
+{% for election in open_elections %}
+<div class="card my-3">
+    <div class="card-header">
+        <h5>{{ election.name }}</h5>
+    </div>
+    <div class="card-body">
+        <p class="card-text fst-italic">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+            </svg>
+            Vote closes at <span class="fst-normal">{{ election.close }}</span>
+        </p>
+        <p class="card-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M96 80c0-26.5 21.5-48 48-48H432c26.5 0 48 21.5 48 48V384H96V80zm313 47c-9.4-9.4-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L409 161c9.4-9.4 9.4-24.6 0-33.9zM0 336c0-26.5 21.5-48 48-48H64V416H512V288h16c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V336z"/></svg>
+            {{ election.total_votes }} vote{% if election.total_votes != 1 %}s{% endif %} recorded
+        </p>
+        <ol>
+            {% for question in election.questions %}
+            <li>
+                {{ question.name }}
+                <ul>
+                    {% for option in question.options %}
+                    <li> {{ option.name }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ol>
+        {%- if logged_in -%}
+            {%- if election.has_voted -%}
+                <button class="btn btn-primary" disabled>Vote already recorded!</a>
+            {%- else -%}
+                <a class="btn btn-primary" href="/vote/{{ election.id }}">Vote</a>
+            {%- endif -%}
+        {%- else -%}
+        <a class="btn btn-secondary" href="/request_login">Login before voting</a>
+        {%- endif -%}
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if closed_elections|length > 0 %}
+<h1>Completed votes</h1>
+
+{% for election in closed_elections %}
+<div class="card my-3">
+    <div class="card-header">
+        <h5>{{ election.name }}</h5>
+    </div>
+    <div class="card-body">
+        <p class="card-text fst-italic">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+            </svg>
+            Vote closed at <span class="fst-normal">{{ election.close }}</span>
+        </p>
+        <p class="card-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M96 80c0-26.5 21.5-48 48-48H432c26.5 0 48 21.5 48 48V384H96V80zm313 47c-9.4-9.4-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L409 161c9.4-9.4 9.4-24.6 0-33.9zM0 336c0-26.5 21.5-48 48-48H64V416H512V288h16c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V336z"/></svg>
+            {{ election.total_votes }} vote{% if election.total_votes != 1 %}s{% endif %} recorded
+        </p>
+        <ol>
+            {% for question in election.questions %}
+            <li>
+                {{ question.name }}
+                <ul>
+                    {% for option in question.options %}
+                    <li> <span class="badge rounded-pill bg-primary">{{ option.votes }}</span> {{ option.name }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<hr>
+
+<p>
+A fair, honest, and trustworthy election requires:
+<ul>
+    <li><em>security</em> to ensure that valid voters are given exactly one vote</li>
+    <li><em>secrecy</em> so that each voter can feel safe to express their voice without retaliation.</li>
+</ul>
+</p>
+
+<p>
+The <a href="https://mitgsu.org/ballot-privacy">voting system implemented by the GSU/UE</a> does not satisfy their stated objective to respect these ideals. In particular
+<ul>
+    <li>No validation that the person controlling the claimed ID is performed on this when the form is submitted. The GSU/UE's voting system identifies a vote as legitimate if their "ballot" is provided any valid Kerberos ID and Department pair.</li>
+    <li>The GSU/UE's votes are not stored secretly, but contain a unique key that links votes to voters. Only administrative controls prevent misuse.</li>
+    <li>The GSU/UE compromises on security and secrecy because they claim it is difficult to check who has signed cards. However, this can be achieved with external database lookups when submitting a vote. Even storage methods like Excel spreadsheets can easily be queried programmatically.</li>
+</ul>
+</p>
+<p>However, <b>these problems have standard, battle-tested solutions</b> that do not sacrifice security and secrecy.</p>
+
+<h2>Technical details</h2>
+<p>
+    Votes submitted on this website are <emph>secure</emph>
+    because Kerberos identity is validated by sending a one-time login link to your MIT email, after checking
+    against the MIT directory that you are a graduate student. This leaks a small amount of information to MIT, namely
+    that you attempted to login to the voting website. It is safe but obviously not recommended to share the login email after you use the link;
+    the link cannot be reused.
+</p>
+<p>
+    The directory check to confirm that you are a graduate student is cached, to further reduce information leakage to MIT.
+    This check could easily be replaced with e.g. a lookup to a card signer database.
+</p>
+<p>
+    Votes are also <emph>secret</emph> because the underlying database table stores who has voted in an election separate
+    from the votes, with no shared identifying key. Unlike the GSU/UE's implementation, there is no way to correlate votes with voters.
+    Furthermore, votes are stored with a random index, which means that even vote order is not preserved.
+</p>
+<p>
+    Following web best practices, this website uses CSRF tokens and time-limited session cookies to prevent session hijacking.
+</p>
+<p>
+    The software running this site is <a href="https://github.com/notayankeesfan/grad-student-voting">open-source</a> and specifically available under a license that allows anyone,
+    including the GSU, to run, modify, and use with no restrictions other than attributing the original authors. You can validate the claims we make!
+</p>
+
+
+{% endblock %}

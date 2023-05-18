@@ -1,0 +1,8 @@
+You are receiving this email because someone, possibly you, attempted to login to https://vote.uenotformit.org
+If you did not request this login, you can safely ignore this email.
+
+You can use the following one-use link to login. The link expires in 10 minutes. Do not send this link to someone else!
+
+{{ url }}
+
+Contact uenotformit-contributors@mit.edu if you continue to receive unwanted emails.

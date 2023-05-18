@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+{% if alert %}
+<div class="alert alert-{{ alert_type }}" role="alert">{{ alert }} {% if alert_type == "success" %}You can <a href="/">return to the main page.</a>{% endif %}</div>
+{% endif %}
+
+{% if election %}
+<h1>{{ election.name }}</h1>
+<form method="post">
+    {% for question in election.questions %}
+    <div class="mb-3">
+        <h3>{{ question.name }}</h3>
+        {% for option in question.options %}
+            <div class="form-check mx-3">
+                <input class="form-check-input" type="radio" name="question-{{ question.id }}" id="question-{{ question.id }}-{{ option.id }}" value="{{ option.id }}" required>
+                <label class="form-check-label" for="question-{{ question.id }}-{{ loop.index }}">
+                    {{ option.name }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <input type="hidden" id="csrf" name="csrf" value="{{ csrf }}">
+    <div id="submitHelp" class="form-text">You cannot change your vote after you submit. Choose carefully!</div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endif %}
+
+{% endblock %}

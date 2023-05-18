@@ -1,0 +1,19 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+Type=notify
+DynamicUser=yes
+StateDirectory=vote-daemon
+RuntimeDirectory=gunicorn
+WorkingDirectory=/home/vote-daemon
+ExecStart=/home/vote-daemon/env/bin/gunicorn vote.serve:app --workers 4 --worker-class uvicorn.workers.UvicornWorker
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
