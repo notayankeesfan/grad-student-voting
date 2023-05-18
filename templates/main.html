@@ -38,7 +38,7 @@ See more technical details below the vote list.
                 {{ question.name }}
                 <ul>
                     {% for option in question.options %}
-                    <li> {{ option.name }}</li>
+                    <li style="list-style-type: square;"> {{ option.name }}</li>
                     {% endfor %}
                 </ul>
             </li>
@@ -48,7 +48,7 @@ See more technical details below the vote list.
             {%- if election.has_voted -%}
                 <button class="btn btn-primary" disabled>Vote already recorded!</a>
             {%- else -%}
-                <a class="btn btn-primary" href="/vote/{{ election.id }}">Vote</a>
+                <a class="btn btn-primary" href="/vote/{{ election.id }}">Go to ballot</a>
             {%- endif -%}
         {%- else -%}
         <a class="btn btn-secondary" href="/request_login">Login before voting</a>
@@ -84,7 +84,7 @@ See more technical details below the vote list.
                 {{ question.name }}
                 <ul>
                     {% for option in question.options %}
-                    <li> <span class="badge rounded-pill bg-primary">{{ option.votes }}</span> {{ option.name }}</li>
+                    <li style="list-style-type: square;"> <span class="badge rounded-pill bg-primary">{{ option.votes }}</span> {{ option.name }}</li>
                     {% endfor %}
                 </ul>
             </li>
